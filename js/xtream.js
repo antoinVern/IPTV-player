@@ -2,7 +2,7 @@
 function xtDialog(){
   const x=db.xt||{};
   form('Connecter un Xtream',[{k:'server',label:'Serveur',val:x.server||'',ph:'http://monserveur.com:8080'},{k:'user',label:'Identifiant',val:x.user||''},{k:'pass',label:'Mot de passe',type:'password'}],'Importer',doXtream,
-    'Les chaînes françaises sont rangées automatiquement (TNT, Sport, Info…) ; le reste de ton fournisseur va dans « 📦 Fournisseur ». '+(PROXY?'🟢 Passage par le proxy local.':'Conseil : lance <b>node proxy.js</b> et ouvre <b>http://localhost:8787</b> pour éviter les blocages du navigateur.'));
+    'Les chaînes françaises sont rangées automatiquement (TNT, Sport, Info…) ; le reste de ton fournisseur va dans « Fournisseur ». '+(PROXY?'Passage par le proxy local.':'Conseil : lance <b>node proxy.js</b> et ouvre <b>http://localhost:8787</b> pour éviter les blocages du navigateur.'));
 }
 async function doXtream(v,say){
   let server=v.server.trim().replace(/\/+$/,'');
@@ -33,3 +33,29 @@ async function doXtream(v,say){
   ensureFav(db);const nFr=rangerFr(db,false);path=[db.root];selStack=[];sel=0;save();render();toast(streams.length+' chaînes importées · '+nFr+' françaises rangées · Films et Séries ajoutés');
 }
 
+
+/* ---------- abonnement Xtream (affiché dans les Réglages) ---------- */
+// player_api.php sans « action » renvoie user_info : exp_date (horodatage, ou vide = illimité),
+// status, max_connections, active_cons, is_trial. Gardé 10 minutes.
+let aboCache=null;
+function chargerAbonnement(){
+  if(db.demo||!xtCreds())return Promise.resolve(null);
+  if(aboCache&&Date.now()-aboCache.t<6e5)return Promise.resolve(aboCache.u);
+  return xtApi('').then(j=>{const u=j&&j.user_info;if(u)aboCache={t:Date.now(),u};return u||null;});
+}
+function texteAbonnement(u){
+  if(!u)return{txt:'Infos de l’abonnement indisponibles',cls:''};
+  const statut=String(u.status||'').toLowerCase(),fin=+u.exp_date*1000;
+  const cnx=u.max_connections?` · ${u.active_cons||0}/${u.max_connections} connexion${u.max_connections>1?'s':''} en cours`:'';
+  const essai=u.is_trial==1||u.is_trial==='1'?' · essai':'';
+  if(statut&&statut!=='active')return{txt:`Abonnement ${statut==='expired'?'expiré':statut==='banned'?'banni':statut==='disabled'?'désactivé':statut}${fin?' (fin le '+new Date(fin).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'})+')':''}${cnx}`,cls:'expire'};
+  if(!fin)return{txt:'Abonnement actif · sans date de fin'+essai+cnx,cls:'ok'};
+  const jours=Math.ceil((fin-Date.now())/864e5),date=new Date(fin).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  if(jours<0)return{txt:`Abonnement expiré depuis le ${date}${cnx}`,cls:'expire'};
+  return{txt:`Abonnement actif jusqu’au ${date} (${jours<=1?(jours===1?'demain':'aujourd’hui'):'dans '+jours+' jours'})${essai}${cnx}`,cls:jours<=15?'bientot':'ok'};
+}
+function remplirAbonnement(el){
+  if(!el)return;
+  chargerAbonnement().then(u=>{if(!el.isConnected)return;const r=texteAbonnement(u);el.className='abo '+r.cls;el.innerHTML=`${icone('guide')}<span>${esc(r.txt)}</span>`;})
+    .catch(()=>{if(el.isConnected)el.innerHTML=`${icone('guide')}<span>Abonnement : serveur injoignable</span>`;});
+}

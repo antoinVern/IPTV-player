@@ -69,17 +69,18 @@ function testCard(name){
 function closePlayer(){const vod=estVod(db.channels[queue[qi]]);stopMedia();player.hidden=true;ambiance();render();if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}
 function zap(d){if(queue.length<2)return;qi=(qi+d+queue.length)%queue.length;startChannel()}
 function fs(){try{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();if(p&&p.catch)p.catch(()=>toast('Plein écran refusé par le navigateur'));}catch(e){}}
-function favBtn(){const b=$('#pfav');if(!b)return;const on=isFav(queue[qi]);b.textContent=on?'★':'☆';b.classList.toggle('on',on);}
+function favBtn(){const b=$('#pfav');if(!b)return;const on=isFav(queue[qi]);b.innerHTML=icone('etoile',on);b.classList.toggle('on',on);}
 /* ---------- son ---------- */
 const volV=()=>prefs.vol==null?1:prefs.vol;
 function appliqueVolume(){
   vid.volume=volV();vid.muted=!!prefs.mute;const v=Math.round(volV()*100);
-  $('#pvolr').value=prefs.mute?0:v;$('#pvol').textContent=prefs.mute||!v?'🔇':v<50?'🔉':'🔊';
+  $('#pvolr').value=prefs.mute?0:v;$('#pvol').innerHTML=icone(prefs.mute||!v?'muet':v<50?'sonbas':'son');
 }
-function volume(delta){prefs.mute=false;prefs.vol=Math.max(0,Math.min(1,Math.round((volV()+delta)*20)/20));savePrefs();appliqueVolume();toast('🔊 Volume '+Math.round(prefs.vol*100)+' %');}
-function muet(){prefs.mute=!prefs.mute;savePrefs();appliqueVolume();toast(prefs.mute?'🔇 Son coupé':'🔊 Son remis');}
+function volume(delta){prefs.mute=false;prefs.vol=Math.max(0,Math.min(1,Math.round((volV()+delta)*20)/20));savePrefs();appliqueVolume();toast('Volume '+Math.round(prefs.vol*100)+' %');}
+function muet(){prefs.mute=!prefs.mute;savePrefs();appliqueVolume();toast(prefs.mute?'Son coupé':'Son remis');}
 $('#pvol').onclick=muet;
 $('#pvolr').oninput=e=>{prefs.vol=e.target.value/100;prefs.mute=false;savePrefs();appliqueVolume();};
 $('#pfav').onclick=()=>toggleFav(queue[qi]);
+$('#pclose').innerHTML=icone('fermer');$('#pfull').innerHTML=icone('pleinecran');$('#pvol').innerHTML=icone('son');$('#pfav').innerHTML=icone('etoile');
 $('#pclose').onclick=closePlayer;$('#pfull').onclick=fs;
 

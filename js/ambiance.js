@@ -8,13 +8,15 @@
 const PKEY='menutv.prefs';
 let prefs=(()=>{try{return JSON.parse(localStorage.getItem(PKEY))||{}}catch(e){return{}}})();
 function savePrefs(){try{localStorage.setItem(PKEY,JSON.stringify(prefs))}catch(e){}}
-const THEMES={classique:'Classique',vice:'Néon Vice 🌴'};
+const THEMES={classique:'Classique',sombre:'Sombre',vice:'Néon Vice'};
+// sans choix : suit le réglage clair / sombre de l'appareil
+const themeActuel=()=>prefs.theme||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'sombre':'classique');
 const MUSIQUES={false:'Coupée',synth:'Synthwave (originale)',file:'Mon fichier musique/fond.mp3'};
 const musVol=()=>prefs.mvol==null?0.45:prefs.mvol;
-const musicMode=()=>prefs.music===undefined?(prefs.theme==='vice'?'synth':false):prefs.music;
+const musicMode=()=>prefs.music===undefined?(themeActuel()==='vice'?'synth':false):prefs.music;
 
-function applyTheme(){document.documentElement.dataset.theme=prefs.theme||'classique';}
-function cycleTheme(){const k=Object.keys(THEMES);prefs.theme=k[(k.indexOf(prefs.theme||'classique')+1)%k.length];savePrefs();applyTheme();ambiance();}
+function applyTheme(){document.documentElement.dataset.theme=themeActuel();}
+function cycleTheme(){const k=Object.keys(THEMES);prefs.theme=k[(k.indexOf(themeActuel())+1)%k.length];savePrefs();applyTheme();ambiance();}
 function cycleMusic(){const k=[false,'synth','file'];prefs.music=k[(k.indexOf(musicMode())+1)%k.length];savePrefs();ambiance();}
 applyTheme();
 

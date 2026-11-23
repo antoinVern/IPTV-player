@@ -20,30 +20,30 @@ function logoSuivant(img){let a=[];try{a=JSON.parse(img.dataset.alts||'[]')}catc
 function hue(s){let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))%360;return h}
 function tileHtml(it,i){
   const s=i===sel?' sel':'';
-  const eb=(c)=>`<div class="eb"><button data-a="ren" title="Renommer">✎</button><button data-a="del" title="Supprimer">✕</button></div><div class="mv"><button data-a="l">◀</button><button data-a="r">▶</button>${c?'<button data-a="cp" title="Copier vers…">⧉</button>':''}</div>`;
+  const eb=(c)=>`<div class="eb"><button data-a="ren" title="Renommer">${icone('crayon')}</button><button data-a="del" title="Supprimer">${icone('fermer')}</button></div><div class="mv"><button data-a="l" title="Vers la gauche">${icone('gauche')}</button><button data-a="r" title="Vers la droite">${icone('droite')}</button>${c?'<button data-a="cp" title="Copier vers…">'+icone('copier')+'</button>':''}</div>`;
   // films, épisodes, séries : affiche (poster) en grand
-  const affiche=(img,nom,sous,fav,boutons)=>`<div class="tile affiche${s}" data-i="${i}">${fav?'<div class="favb">★</div>':''}${it.t==='c'?'<div class="qbw">'+badgeQualite(db.channels[it.id])+'</div>':''}<img class="affb" src="${esc(img)}" referrerpolicy="no-referrer" alt=""><img class="aff" src="${esc(img)}" referrerpolicy="no-referrer" alt="" onerror="this.closest('.tile').classList.add('sansaff')"><div class="ico">${nom.ico}</div><div class="lbl">${esc(nom.t)}</div><div class="sub">${sous}</div>${boutons}</div>`;
+  const affiche=(img,nom,sous,fav,boutons)=>`<div class="tile affiche${s}" data-i="${i}">${fav?'<div class="favb">'+icone('etoile',true)+'</div>':''}${it.t==='c'?'<div class="qbw">'+badgeQualite(db.channels[it.id])+'</div>':''}<img class="affb" src="${esc(img)}" referrerpolicy="no-referrer" alt=""><img class="aff" src="${esc(img)}" referrerpolicy="no-referrer" alt="" onerror="this.closest('.tile').classList.add('sansaff')"><div class="ico">${nom.ico}</div><div class="lbl">${esc(nom.t)}</div><div class="sub">${sous}</div>${boutons}</div>`;
   if(it.t==='f'&&db.nodes[it.id].affiche&&db.nodes[it.id].logo){const n=db.nodes[it.id];
-    return affiche(n.logo,{t:n.name,ico:esc(n.icon||'🍿')},n.note?'★ '+n.note:'',false,eb(false));}
+    return affiche(n.logo,{t:n.name,ico:pastilleNoeud(n)},n.note?'★ '+n.note:'',false,eb(false));}
   if(it.t==='c'&&estVod(db.channels[it.id])){const c=db.channels[it.id],pos=positions[it.id];
     const sous=(c.note?'★ '+c.note:'')+(pos?(c.note?' · ':'')+'▶ reprise '+duree(pos):'');
-    if(c.logo)return affiche(c.logo,{t:c.name,ico:'🎬'},sous,isFav(it.id),eb(true));
-    return `<div class="tile${s}" data-i="${i}">${isFav(it.id)?'<div class="favb">★</div>':''}<div class="ico">${c.kind==='episode'?'📺':'🎬'}</div><div class="lbl">${esc(c.name)}</div><div class="sub">${sous}</div>${eb(true)}</div>`;}
-  if(it.t==='app'){const a=APPLIS[it.k];return `<div class="tile${s}" data-i="${i}"><div class="appico" style="background:${a.coul}">${a.glyphe}</div><div class="lbl">${a.nom}</div><div class="sub">${esc(sousAppli(it.k))}</div></div>`;}
-  if(it.t==='vsearch')return `<div class="tile${s}" data-i="${i}"><div class="ico">🔍</div><div class="lbl">${it.k==='vodcats'?'Rechercher un film':'Rechercher une série'}</div><div class="sub">dans tout le catalogue</div></div>`;
+    if(c.logo)return affiche(c.logo,{t:c.name,ico:pastille('film')},sous,isFav(it.id),eb(true));
+    return `<div class="tile${s}" data-i="${i}">${isFav(it.id)?'<div class="favb">'+icone('etoile',true)+'</div>':''}<div class="ico">${pastille(c.kind==='episode'?'tv':'film')}</div><div class="lbl">${esc(c.name)}</div><div class="sub">${sous}</div>${eb(true)}</div>`;}
+  if(it.t==='app'){const a=APPLIS[it.k];return `<div class="tile${s}" data-i="${i}"><div class="appico" style="background:${a.coul}">${icone(a.ic,a.ic==='lecture')}</div><div class="lbl">${a.nom}</div><div class="sub">${esc(sousAppli(it.k))}</div></div>`;}
+  if(it.t==='vsearch')return `<div class="tile${s}" data-i="${i}"><div class="ico">${pastille('recherche')}</div><div class="lbl">${it.k==='vodcats'?'Rechercher un film':'Rechercher une série'}</div><div class="sub">dans tout le catalogue</div></div>`;
   if(it.t==='f'){const n=db.nodes[it.id];const k=n.children.length+n.channels.length;
-    const ico=`<div class="ico">${esc(n.icon||'📁')}</div>`;
+    const ico=`<div class="ico">${pastilleNoeud(n)}</div>`;
     const logos=n.logo?[n.logo]:n.autoLogo?[...new Set(n.channels.map(c=>db.channels[c]&&db.channels[c].logo).filter(Boolean))].slice(0,8):[];
     const vis=logos.length?`<img class="logo" src="${esc(logos[0])}" referrerpolicy="no-referrer" onerror="logoSuivant(this)" data-alts="${esc(JSON.stringify(logos.slice(1)))}" data-fb="${esc(ico)}">`:ico;
     return `<div class="tile${s}" data-i="${i}">${vis}<div class="lbl">${esc(n.name)}</div><div class="sub">${n.lazy&&!charges.has(it.id)?'Ouvrir ›':k+' élément'+(k>1?'s':'')}</div>${eb(false)}</div>`;}
   if(it.t==='c'){const c=db.channels[it.id];
     const fb=`<div class="ini" style="background:linear-gradient(hsl(${hue(c.name)} 70% 62%),hsl(${hue(c.name)} 65% 45%))">${esc((c.name.trim()[0]||'?').toUpperCase())}</div>`;
     const img=c.logo?`<img class="logo" src="${esc(c.logo)}" referrerpolicy="no-referrer" onerror="this.outerHTML=this.dataset.fb" data-fb="${esc(fb)}">`:fb;
-    return `<div class="tile${s}" data-i="${i}">${isFav(it.id)?'<div class="favb">★</div>':''}<div class="qbw">${badgeQualite(c)}</div>${img}<div class="lbl">${esc(c.name)}</div><div class="sub now" data-now="${esc(it.id)}"></div>${eb(true)}</div>`;}
-  if(it.t==='epg')return `<div class="tile${s}" data-i="${i}"><div class="ico">📅</div><div class="lbl">Guide TV</div><div class="sub">En ce moment</div></div>`;
-  if(it.t==='all')return `<div class="tile${s}" data-i="${i}"><div class="ico">🔍</div><div class="lbl">Toutes les chaînes</div><div class="sub">${Object.values(db.channels).filter(c=>!c.kind).length}</div></div>`;
-  if(it.t==='add')return `<div class="tile add${s}" data-i="${i}"><div class="ico">＋</div><div class="lbl">Nouvelle catégorie</div></div>`;
-  return `<div class="tile add${s}" data-i="${i}"><div class="ico">📺</div><div class="lbl">Ajouter une chaîne</div></div>`;
+    return `<div class="tile${s}" data-i="${i}">${isFav(it.id)?'<div class="favb">'+icone('etoile',true)+'</div>':''}<div class="qbw">${badgeQualite(c)}</div>${img}<div class="lbl">${esc(c.name)}</div><div class="sub now" data-now="${esc(it.id)}"></div>${eb(true)}</div>`;}
+  if(it.t==='epg')return `<div class="tile${s}" data-i="${i}"><div class="ico">${pastille('guide')}</div><div class="lbl">Guide TV</div><div class="sub">En ce moment</div></div>`;
+  if(it.t==='all')return `<div class="tile${s}" data-i="${i}"><div class="ico">${pastille('recherche')}</div><div class="lbl">Toutes les chaînes</div><div class="sub">${Object.values(db.channels).filter(c=>!c.kind).length}</div></div>`;
+  if(it.t==='add')return `<div class="tile add${s}" data-i="${i}"><div class="ico">${pastille('plus')}</div><div class="lbl">Nouvelle catégorie</div></div>`;
+  return `<div class="tile add${s}" data-i="${i}"><div class="ico">${pastille('tv')}</div><div class="lbl">Ajouter une chaîne</div></div>`;
 }
 function render(){
   if(menuConsole()){renderConsole();return;}   // barre croisée / tuiles (js/consoles.js)
@@ -57,7 +57,7 @@ function render(){
   $('#prev').hidden=page===0;$('#next').hidden=page>=pages-1;
   const names=path.slice(1).map(id=>db.nodes[id].name);
   $('#crumb').textContent=(edit?'Mode organisation · ':'Menu TV')+(names.length?(edit?'':' › ')+names.join(' › '):'')+(pages>1?`  ·  page ${page+1}/${pages}`:'');
-  $('#home').textContent=path.length>1?'←':'⌂';
+  $('#home').innerHTML=icone(path.length>1?'retour':'maison');
   document.body.classList.toggle('edit',edit);
 }
 function updateSel(){grid.querySelectorAll('.tile[data-i]').forEach(t=>t.classList.toggle('sel',+t.dataset.i===sel))}
@@ -102,6 +102,7 @@ grid.addEventListener('mouseover',e=>{const t=e.target.closest('.tile[data-i]');
 $('#prev').onclick=()=>{const pp=cols()*rows();setSel(Math.max(0,(Math.floor(sel/pp)-1)*pp));tick()};
 $('#next').onclick=()=>{const pp=cols()*rows();setSel(Math.min(items().length-1,(Math.floor(sel/pp)+1)*pp));tick()};
 $('#home').onclick=back;
+$('#gear').innerHTML=icone('reglages');
 $('#gear').onclick=()=>settings(); // settings est dans fenetres.js, chargé après
 addEventListener('resize',render);
 

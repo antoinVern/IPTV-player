@@ -8,9 +8,9 @@
  *   - navigateur       : nouvel onglet
  */
 const APPLIS={
-  youtube:{nom:'YouTube',ico:'▶️',glyphe:'▶',coul:'#e62117',web:'https://www.youtube.com/'},
-  twitch:{nom:'Twitch',ico:'🎮',glyphe:'◆',coul:'#9146ff',web:'https://www.twitch.tv/'},
-  spotify:{nom:'Spotify',ico:'🎵',glyphe:'♫',coul:'#1db954',web:'https://open.spotify.com/'},
+  youtube:{nom:'YouTube',ic:'lecture',coul:'#e62117',web:'https://www.youtube.com/'},
+  twitch:{nom:'Twitch',ic:'direct',coul:'#9146ff',web:'https://www.twitch.tv/'},
+  spotify:{nom:'Spotify',ic:'musique',coul:'#1db954',web:'https://open.spotify.com/'},
 };
 const ITEMS_APPLIS=Object.keys(APPLIS).map(k=>({t:'app',k}));
 let appliOuverte=false;   // la musique de fond se tait pendant qu'une appli est ouverte

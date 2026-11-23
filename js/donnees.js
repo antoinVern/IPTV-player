@@ -32,7 +32,7 @@ function toggleFav(id){
   delete db.channels[id].virt;
   ensureFav(db);const f=db.nodes[db.favId];
   if(f.channels.includes(id)){f.channels=f.channels.filter(x=>x!==id);toast('Retirée des favoris');}
-  else{f.channels.push(id);toast('⭐ Ajoutée aux favoris');}
+  else{f.channels.push(id);toast('Ajoutée aux favoris');}
   save();render();if(typeof favBtn==='function')favBtn();
 }
 function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.nodes&&d.root)return d}catch(e){}return null}

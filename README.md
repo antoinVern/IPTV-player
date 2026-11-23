@@ -1,3 +1,5 @@
+<p align="center"><img src="img/logo-512.png" width="160" alt="Menu TV"></p>
+
 # Menu TV
 
 Menu de chaînes façon console, pour PC et Fire Stick, avec import Xtream et guide TV.
@@ -47,7 +49,9 @@ Sans le proxy, `index.html` s'ouvre aussi directement, mais le navigateur bloque
 |---|---|
 | `index.html` | structure de la page |
 | `css/style.css` | mise en forme (thème classique) |
-| `css/theme-vice.css` | thème Néon Vice (Réglages > Thème) |
+| `css/theme-vice.css` | thème Néon Vice (le thème Sombre est dans `css/style.css`) |
+| `js/icones.js` | icônes vectorielles des menus (à la place des emojis) |
+| `outils/logo/` | logo en SVG + `generer-logo.js` (ico Windows, icône et bannière Fire TV, favicon) |
 | `js/france.js` | rangement auto des chaînes françaises : **règles à modifier ici** |
 | `js/donnees.js` | outils communs, démo, favoris, sauvegarde (localStorage) |
 | `js/guide.js` | détection du proxy, guide TV (EPG) |

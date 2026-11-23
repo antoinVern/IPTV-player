@@ -9,7 +9,7 @@
 const MENUS={grille:'Grille',barre:'Barre croisée · façon PS3',tuiles:'Tuiles · façon PS4'};
 function menuConsole(){const m=prefs.menu;return !edit&&(m==='barre'||m==='tuiles')?m:'';}
 function cycleMenu(){const k=Object.keys(MENUS);prefs.menu=k[(k.indexOf(prefs.menu||'grille')+1)%k.length];savePrefs();
-  path=[db.root];selStack=[];sel=0;render();toast('🕹️ Menu : '+MENUS[prefs.menu]);}
+  path=[db.root];selStack=[];sel=0;render();toast('Menu : '+MENUS[prefs.menu]);}
 const barreLigne={};   // barre croisée : ligne choisie dans chaque catégorie
 const cons=$('#console');
 let consVer=0;
@@ -18,39 +18,39 @@ let consVer=0;
 const REGLAGES_BARRE=[{t:'act',a:'menu'},{t:'act',a:'theme'},{t:'act',a:'music'},{t:'act',a:'xt'},{t:'set'}];
 function infoEl(it){
   if(!it)return{ico:'',titre:'',sous:''};
-  if(it.t==='wait')return{ico:'⏳',titre:'Chargement…',sous:''};
-  if(it.t==='set')return{ico:'⚙️',titre:it.cat||(path.length===1&&menuConsole()==='tuiles')?'Réglages':'Tous les réglages',sous:'Thème, menu, son, Xtream…'};
+  if(it.t==='wait')return{ico:'attente',titre:'Chargement…',sous:''};
+  if(it.t==='set')return{ico:'reglages',titre:it.cat||(path.length===1&&menuConsole()==='tuiles')?'Réglages':'Tous les réglages',sous:'Thème, menu, son, Xtream…'};
   if(it.t==='act'){
-    if(it.a==='menu')return{ico:'🕹️',titre:'Type de menu',sous:MENUS[prefs.menu||'grille']};
-    if(it.a==='theme')return{ico:'🎨',titre:'Thème',sous:THEMES[prefs.theme||'classique']};
-    if(it.a==='music')return{ico:'🎵',titre:'Musique de fond',sous:MUSIQUES[musicMode()]};
-    return{ico:'🔌',titre:'Connecter mon Xtream',sous:db.xt?'Connecté':'Pas encore connecté'};
+    if(it.a==='menu')return{ico:'manette',titre:'Type de menu',sous:MENUS[prefs.menu||'grille']};
+    if(it.a==='theme')return{ico:'palette',titre:'Thème',sous:THEMES[themeActuel()]};
+    if(it.a==='music')return{ico:'musique',titre:'Musique de fond',sous:MUSIQUES[musicMode()]};
+    return{ico:'signal',titre:'Connecter mon Xtream',sous:!db.xt?'Pas encore connecté':aboCache?texteAbonnement(aboCache.u).txt:'Connecté'};
   }
-  if(it.t==='app')return{ico:APPLIS[it.k].ico,titre:APPLIS[it.k].nom,sous:sousAppli(it.k)};
-  if(it.t==='all')return{ico:'🔍',titre:'Toutes les chaînes',sous:Object.values(db.channels).filter(c=>!c.kind).length+' chaînes'};
-  if(it.t==='epg')return{ico:'📅',titre:'Guide TV',sous:'En ce moment à la télé'};
-  if(it.t==='vsearch')return{ico:'🔍',titre:it.k==='vodcats'?'Rechercher un film':'Rechercher une série',sous:'Dans tout le catalogue'};
-  if(it.t==='f'){const n=db.nodes[it.id];if(!n)return{ico:'?',titre:'?',sous:''};const k=n.children.length+n.channels.length;
+  if(it.t==='app')return{ico:APPLIS[it.k].ic,titre:APPLIS[it.k].nom,sous:sousAppli(it.k)};
+  if(it.t==='all')return{ico:'recherche',titre:'Toutes les chaînes',sous:Object.values(db.channels).filter(c=>!c.kind).length+' chaînes'};
+  if(it.t==='epg')return{ico:'guide',titre:'Guide TV',sous:'En ce moment à la télé'};
+  if(it.t==='vsearch')return{ico:'recherche',titre:it.k==='vodcats'?'Rechercher un film':'Rechercher une série',sous:'Dans tout le catalogue'};
+  if(it.t==='f'){const n=db.nodes[it.id];if(!n)return{ico:'dossier',titre:'?',sous:''};const k=n.children.length+n.channels.length;
     const auto=n.autoLogo&&n.channels.map(c=>db.channels[c]).find(c=>c&&c.logo);
-    return{ico:n.icon||'📁',img:n.logo||(auto?auto.logo:''),affiche:!!n.affiche,titre:n.name,texte:n.plot||'',
+    return{ico:iconeNoeud(n).nom,img:n.logo||(auto?auto.logo:''),affiche:!!n.affiche,titre:n.name,texte:n.plot||'',
       sous:n.lazy&&!charges.has(it.id)?'Ouvrir ›':(n.note?'★ '+n.note+' · ':'')+k+' élément'+(k>1?'s':'')};}
-  const c=db.channels[it.id];if(!c)return{ico:'?',titre:'?',sous:''};
+  const c=db.channels[it.id];if(!c)return{ico:'tv',titre:'?',sous:''};
   const pos=positions[c.id],vod=estVod(c);
-  return{q:badgeQualite(c),ico:vod?(c.kind==='episode'?'📺':'🎬'):'📺',img:c.logo,affiche:vod,titre:c.name,texte:c.plot||'',fav:isFav(c.id),
+  return{q:badgeQualite(c),ico:vod?(c.kind==='episode'?'tv':'film'):'tv',img:c.logo,affiche:vod,titre:c.name,texte:c.plot||'',fav:isFav(c.id),
     epg:hasEpg(c.id)?c.id:'',sous:vod?[c.note?'★ '+c.note:'',pos?'▶ reprise '+duree(pos):''].filter(Boolean).join(' · '):''};
 }
 function icoHtml(f,cls){
-  const e=`<span class="${cls}-e">${esc(f.ico)}</span>`;
+  const e=`<span class="${cls}-e">${f.ico?icone(f.ico,f.ico==='lecture'):''}</span>`;
   return f.img?`<img class="${cls}-i" src="${esc(f.img)}" referrerpolicy="no-referrer" alt="" onerror="this.outerHTML=this.dataset.fb" data-fb="${esc(e)}">`:e;
 }
 function elLigne(it){   // ligne de la barre croisée
   const f=infoEl(it),d=document.createElement('div');d.className='xb-it';
-  d.innerHTML=`<div class="ic">${icoHtml(f,'ic')}</div><div class="tx"><b>${esc(f.titre)}${f.q?' '+f.q:''}${f.fav?' <i class="fv">★</i>':''}</b><span${f.epg?` data-epg="${esc(f.epg)}"`:''}>${esc(f.sous)}</span></div>`;
+  d.innerHTML=`<div class="ic">${icoHtml(f,'ic')}</div><div class="tx"><b>${esc(f.titre)}${f.q?' '+f.q:''}${f.fav?' <i class="fv">'+icone('etoile',true)+'</i>':''}</b><span${f.epg?` data-epg="${esc(f.epg)}"`:''}>${esc(f.sous)}</span></div>`;
   return d;
 }
 function elTuile(it){   // tuile
   const f=infoEl(it),d=document.createElement('div');d.className='tu-t'+(f.affiche&&f.img?' aff':'');
-  d.innerHTML=`<div class="tu-img">${icoHtml(f,'tu')}</div>${f.fav?'<i class="fv">★</i>':''}${f.q?'<div class="tu-q">'+f.q+'</div>':''}<div class="tu-nom">${esc(f.titre)}</div>`;
+  d.innerHTML=`<div class="tu-img">${icoHtml(f,'tu')}</div>${f.fav?'<i class="fv">'+icone('etoile',true)+'</i>':''}${f.q?'<div class="tu-q">'+f.q+'</div>':''}<div class="tu-nom">${esc(f.titre)}</div>`;
   return d;
 }
 /* Affiche les éléments [sel-avant, sel+apres] d'une longue liste en gardant les éléments déjà
@@ -68,12 +68,12 @@ function fenetre(cont,cle,n,s,avant,apres,creer,placer){
 }
 
 /* ---------- squelettes ---------- */
-const SQ_BARRE=`<canvas class="xb-vague"></canvas><div class="c-haut"><span class="c-heure"></span><button class="c-gear" title="Réglages">⚙</button></div>
+const SQ_BARRE=`<canvas class="xb-vague"></canvas><div class="c-haut"><img class="c-marque" src="img/favicon.png" alt=""><span class="c-heure"></span><button class="c-gear" title="Réglages">${icone('reglages')}</button></div>
 <div class="xb-barre"></div><div class="xb-col"></div>
 <div class="xb-sous"><div class="xb-parent"></div><div class="xb-trait"></div><div class="xb-liste"></div></div>
 <div class="c-aide">OK  ouvrir   ·   Retour  revenir   ·   ≡  favori</div>`;
 const SQ_TUILES=`<div class="tu-fond"><img class="tu-hero" alt=""></div><div class="tu-bulles"></div>
-<div class="c-haut"><span class="tu-fil"></span><span class="c-heure"></span><button class="c-gear" title="Réglages">⚙</button></div>
+<div class="c-haut"><img class="c-marque" src="img/favicon.png" alt=""><span class="tu-fil"></span><span class="c-heure"></span><button class="c-gear" title="Réglages">${icone('reglages')}</button></div>
 <div class="tu-rang"></div><div class="tu-info"></div>
 <div class="c-aide">OK  ouvrir   ·   Retour  revenir   ·   ≡  favori</div>`;
 
@@ -205,7 +205,7 @@ cons.addEventListener('click',e=>{
 /* ---------- fond animé de la barre croisée : rubans lumineux ---------- */
 // teinte selon l'heure (nuit bleu nuit, matin bleu clair, soir orangé, soirée violette) ou thème Néon Vice
 function teinte(){
-  if((prefs.theme||'classique')==='vice')return{h:318,s:70};
+  if(themeActuel()==='vice')return{h:318,s:70};
   const h=new Date().getHours();
   return h<6?{h:228,s:55}:h<10?{h:198,s:60}:h<17?{h:210,s:65}:h<20?{h:24,s:70}:{h:268,s:50};
 }

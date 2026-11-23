@@ -29,6 +29,7 @@ footer svg{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0
 #home{left:3vw}#gear{right:3vw}
 .center{position:absolute;left:0;right:0;top:52%;text-align:center;line-height:1.25;pointer-events:none}
 .center .t{color:#43b3e6;font-size:clamp(13px,1.6vw,24px);letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 18vw}
+.center .t .marque{height:1.25em;width:1.25em;vertical-align:-.28em;margin-right:.45em;border-radius:22%;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .center .d{color:#9aa3ab;font-size:clamp(15px,2.2vw,32px);font-weight:600}
 body.edit .center .t{color:#e7923a}
 #modal{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:rgba(240,243,246,.75);backdrop-filter:blur(6px)}
@@ -107,3 +108,73 @@ body.edit .qbw{display:none}
 .ptop button{width:42px;height:42px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:rgba(255,255,255,.12);color:#fff;font-size:18px;cursor:pointer}
 #pname{font-size:20px;font-weight:600;flex:1}
 #perr{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;background:rgba(0,0,0,.7);padding:18px 24px;border-radius:16px;max-width:80vw;text-align:center;z-index:2;line-height:1.4}
+
+/* ---------- icônes vectorielles (js/icones.js) ---------- */
+.isvg{width:1.2em;height:1.2em;flex:none;display:inline-block;vertical-align:-.22em}
+.pastille{width:clamp(40px,4.9vw,72px);aspect-ratio:1;border-radius:26%;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(145deg,var(--pa),var(--pb));box-shadow:0 4px 12px color-mix(in srgb,var(--pb) 45%,transparent),inset 0 1px 0 rgba(255,255,255,.35)}
+.pastille .isvg{width:56%;height:56%;vertical-align:0}
+.ico{line-height:0}
+.appico .isvg{width:55%;height:55%;vertical-align:0}
+.favb{line-height:0}.favb .isvg{width:clamp(14px,1.5vw,22px);height:clamp(14px,1.5vw,22px)}
+.circ{padding:0}.circ .isvg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:clamp(22px,2.7vw,38px);height:clamp(22px,2.7vw,38px)}
+.eb button,.mv button{display:grid;place-items:center;padding:0}.eb .isvg,.mv .isvg{width:14px;height:14px;vertical-align:0}
+.ptop button{display:grid;place-items:center}.ptop button .isvg{width:20px;height:20px;vertical-align:0}
+#pfav.on .isvg{color:#ffd54a}
+.btn.big .isvg{margin-right:.55em;color:#3aa7dc}
+.panel label.vol .isvg{margin-right:.4em;color:#3aa7dc}
+.panel h2 .isvg{vertical-align:-.15em;margin-right:.2em}
+.pt{display:inline-block;width:.6em;height:.6em;border-radius:50%;background:#b8c2cc;margin-right:.5em;vertical-align:.05em}
+.pt.ok{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,.6)}
+.abo{display:flex;align-items:center;gap:.6em;margin:8px 0 2px;padding:9px 13px;border-radius:12px;font-size:14px;background:rgba(58,167,220,.1);color:#3d5a6b;border:1.5px solid rgba(58,167,220,.3)}
+.abo .isvg{color:#3aa7dc}
+.abo.bientot{background:rgba(230,150,30,.12);border-color:rgba(230,150,30,.45);color:#8a5600}.abo.bientot .isvg{color:#e0961e}
+.abo.expire{background:rgba(214,60,60,.1);border-color:rgba(214,60,60,.45);color:#a12c2c}.abo.expire .isvg{color:#d63c3c}
+[data-theme=sombre] .abo{color:#b9d6e6}[data-theme=sombre] .abo.bientot{color:#ffc56b}[data-theme=sombre] .abo.expire{color:#ff8a8a}
+[data-theme=vice] .abo{color:#ffe4f3;border-color:#ff4fa3;background:rgba(255,79,163,.12)}
+.choix-ic{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.choix-ic button{border:2px solid transparent;background:none;border-radius:14px;padding:3px;cursor:pointer}
+.choix-ic button.on,.choix-ic button:focus{border-color:#59c3ef;outline:none}
+.choix-ic .pastille{width:38px}
+.tile.affiche .ico{line-height:normal}
+
+/* ---------- thème Sombre ---------- */
+[data-theme=sombre] body{background:#0f1218;color:#c9d1db}
+[data-theme=sombre] body::before{background:repeating-linear-gradient(90deg,rgba(255,255,255,.018) 0 2px,rgba(0,0,0,.05) 2px 6px),linear-gradient(#171b23,#0d1016)}
+[data-theme=sombre] .tile{background:linear-gradient(#232833,#1a1e27);border-color:#2f3643;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 3px 10px rgba(0,0,0,.35)}
+[data-theme=sombre] .tile.empty{background:linear-gradient(#1a1e26,#15181f);border-color:#232832;box-shadow:none;opacity:.7}
+[data-theme=sombre] .tile.sel{border-color:#59c3ef;box-shadow:0 0 0 3px rgba(89,195,239,.3),0 0 24px rgba(89,195,239,.45)}
+[data-theme=sombre] .tile.add{color:#7f8b99}
+[data-theme=sombre] .lbl{color:#e8edf3}
+[data-theme=sombre] .sub{color:#8792a0}
+[data-theme=sombre] .tile .now{color:#5cc2f2}
+[data-theme=sombre] .eb button,[data-theme=sombre] .mv button{background:#2a303c;border-color:#3d4656;color:#c9d1db}
+[data-theme=sombre] footer svg{filter:drop-shadow(0 -2px 10px rgba(0,0,0,.5))}
+[data-theme=sombre] footer stop:first-child{stop-color:#1d222c}
+[data-theme=sombre] footer stop:last-child{stop-color:#12151c}
+[data-theme=sombre] footer path:last-child{stroke:#3b9fd1}
+[data-theme=sombre] .circ{background:radial-gradient(circle at 35% 30%,#2c323e,#1a1e26);border-color:#3b9fd1;color:#c9d1db;box-shadow:0 2px 10px rgba(0,0,0,.5)}
+[data-theme=sombre] .center .t{color:#5cc2f2}
+[data-theme=sombre] .center .d{color:#7f8b99}
+[data-theme=sombre] #modal{background:rgba(5,7,10,.7)}
+[data-theme=sombre] .panel{background:linear-gradient(#1f242e,#181c24);border-color:#2f6f91;box-shadow:0 10px 40px rgba(0,0,0,.6);color:#c9d1db}
+[data-theme=sombre] .panel h2{color:#5cc2f2}
+[data-theme=sombre] .panel label,[data-theme=sombre] .note{color:#93a0ae}
+[data-theme=sombre] .panel label.vol{color:#c9d1db}
+[data-theme=sombre] .panel input{background:#11141a;border-color:#333b48;color:#e8edf3}
+[data-theme=sombre] .panel input:focus{border-color:#59c3ef}
+[data-theme=sombre] .btn{background:linear-gradient(#2a303b,#222731);border-color:#3a4351;color:#dfe5ec}
+[data-theme=sombre] .btn:hover{border-color:#59c3ef}
+[data-theme=sombre] .btn.pri{background:linear-gradient(#3fb0e6,#1f87bd);border-color:#3fb0e6;color:#fff}
+[data-theme=sombre] .item{background:#14181f;border-color:#2b323d;color:#dfe5ec}
+[data-theme=sombre] .item:hover,[data-theme=sombre] .item:focus{border-color:#59c3ef}
+[data-theme=sombre] .grow .gi b{color:#e8edf3}
+[data-theme=sombre] .grow .gn{color:#b6c0cb}
+[data-theme=sombre] .grow .gx{color:#7f8b99}
+[data-theme=sombre] .msg{color:#ff8a65}
+[data-theme=sombre] #toast{background:#2b3442}
+[data-theme=sombre] .qb:not(.vue){background:rgba(0,0,0,.25)}
+[data-theme=sombre] .q1080:not(.vue){color:#4be38f}[data-theme=sombre] .q720:not(.vue){color:#ffc24a}[data-theme=sombre] .q4k:not(.vue){color:#c79bff}[data-theme=sombre] .qsd:not(.vue){color:#ff8a65}
+[data-theme=sombre] .tile.affiche{background:#0c0e13}
+[data-theme=sombre] .panel,[data-theme=sombre] .list{scrollbar-color:#3a4351 #181c24}
+[data-theme=vice] .panel{scrollbar-color:#ff4fa3 #170628}

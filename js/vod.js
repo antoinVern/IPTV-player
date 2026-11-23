@@ -27,7 +27,7 @@ function xtApi(action,extra){
   const x=xtCreds();
   if(!x)return Promise.reject(new Error('connecte d’abord ton Xtream (⚙ Réglages)'));
   return proxyReady
-    .then(()=>fetch(px(`${x.server}/player_api.php?username=${x.u}&password=${x.pw}&action=${action}${extra||''}`)))
+    .then(()=>fetch(px(`${x.server}/player_api.php?username=${x.u}&password=${x.pw}${action?'&action='+action:''}${extra||''}`)))
     .then(r=>{if(!r.ok)throw new Error('erreur du serveur ('+r.status+')');return r.json();});
 }
 
@@ -128,7 +128,7 @@ async function chargerDossier(id){
 
 /* ---------- recherche dans tout le catalogue ---------- */
 async function rechercheVod(type){
-  const films=type==='vodcats',titre=films?'🔍 Rechercher un film':'🔍 Rechercher une série';
+  const films=type==='vodcats',titre=icone('recherche')+(films?' Rechercher un film':' Rechercher une série');
   const p=modal(`<h2>${titre}</h2><input id="q" placeholder="Titre…" autocomplete="off"><div class="list" id="res"><div class="note">Chargement du catalogue…</div></div><div class="row-btns"><button class="btn" data-x>Fermer</button></div>`);
   p.querySelector('[data-x]').onclick=closeModal;
   const q=p.querySelector('#q'),res=p.querySelector('#res');q.focus();
@@ -163,15 +163,15 @@ function duree(s){s=Math.max(0,Math.floor(s||0));const h=Math.floor(s/3600),m=Ma
 function reprise(c){
   const p=positions[c.id];if(!(p>=30))return;
   const f=()=>{vid.removeEventListener('loadedmetadata',f);
-    if(queue[qi]===c.id&&vid.duration&&p<vid.duration-120){vid.currentTime=p;toast('▶ Reprise à '+duree(p));}};
+    if(queue[qi]===c.id&&vid.duration&&p<vid.duration-120){vid.currentTime=p;toast('Reprise à '+duree(p));}};
   vid.addEventListener('loadedmetadata',f);
 }
 function avance(s){
   if(!isFinite(vid.duration)||!vid.duration)return;
   vid.currentTime=Math.max(0,Math.min(vid.duration-1,vid.currentTime+s));
-  toast((s>0?'⏩ +':'⏪ ')+s+' s · '+duree(vid.currentTime)+' / '+duree(vid.duration));majProgres();
+  toast((s>0?'Avance +':'Retour ')+s+' s · '+duree(vid.currentTime)+' / '+duree(vid.duration));majProgres();
 }
-function pauseLecture(){if(vid.paused)vid.play().catch(()=>{});else vid.pause();toast(vid.paused?'⏸ Pause':'▶ Lecture');}
+function pauseLecture(){if(vid.paused)vid.play().catch(()=>{});else vid.pause();toast(vid.paused?'Pause':'Lecture');}
 function majProgres(){
   const i=$('#pinfo .vodbar i'),t=$('#pinfo .vt');if(!i||!vid.duration||!isFinite(vid.duration))return;
   i.style.width=(vid.currentTime/vid.duration*100)+'%';t.textContent=duree(vid.currentTime)+' / '+duree(vid.duration);
@@ -193,6 +193,6 @@ vid.addEventListener('timeupdate',()=>{
   }
 });
 vid.addEventListener('ended',()=>{const c=db.channels[queue[qi]];
-  if(c&&c.kind==='episode'&&qi<queue.length-1){toast('▶ Épisode suivant');zap(1);}});
+  if(c&&c.kind==='episode'&&qi<queue.length-1){toast('Épisode suivant');zap(1);}});
 
 ensureVod(db);
