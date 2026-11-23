@@ -93,6 +93,15 @@ body.edit .center .t{color:#e7923a}
 .tile.affiche.sansaff .affb,.tile.affiche.sansaff .aff{display:none}
 .tile.affiche.sansaff .ico{display:block;margin-bottom:auto;margin-top:auto}
 #pinfo .pnote{font-size:15px;color:#ffd54a;font-weight:600}
+.qb{display:inline-block;font-size:clamp(10px,.85vw,14px);font-weight:700;padding:.05em .45em;border-radius:.35em;border:1.5px solid currentColor;line-height:1.25;letter-spacing:.02em;vertical-align:middle;white-space:nowrap;font-family:"Segoe UI",system-ui,sans-serif;text-shadow:none}
+.qb.vue{color:#fff!important;border-color:transparent}
+.q4k{color:#9b59ff}.q4k.vue{background:#8a3ffc}
+.q1080{color:#1a9c56}.q1080.vue{background:#1fb86a}
+.q720{color:#c98400}.q720.vue{background:#d9a21b}
+.qsd{color:#c0562f}.qsd.vue{background:#c0562f}
+.qbw{position:absolute;top:7px;right:8px;z-index:1}
+body.edit .qbw{display:none}
+[data-theme=vice] .q1080:not(.vue){color:#3ef08a}[data-theme=vice] .q720:not(.vue){color:#ffc24a}
 .tile .now{max-width:92%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#43a0d0}
 .ptop button{width:42px;height:42px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:rgba(255,255,255,.12);color:#fff;font-size:18px;cursor:pointer}
 #pname{font-size:20px;font-weight:600;flex:1}

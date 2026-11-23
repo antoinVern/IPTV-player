@@ -28,6 +28,7 @@ document.addEventListener('keydown',e=>{
     else if(e.key==='ContextMenu'||e.key==='*'||e.key==='s'||e.key==='S'){e.preventDefault();toggleFav(queue[qi]);}
     return;
   }
+  if(menuConsole()){toucheConsole(e);return;}   // barre croisée / tuiles
   const its=items(),C=cols();let n=sel;
   switch(e.key){
     case'ArrowRight':n=Math.min(its.length-1,sel+1);break;

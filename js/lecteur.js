@@ -13,7 +13,9 @@ function info(){
 }
 player.addEventListener('mousemove',bar);
 // résolution réelle affichée dans la barre du lecteur (4K / 1080p / 720p / SD)
+let hMax=0;
 function resolution(){const h=vid.videoHeight,b=$('#pres');if(!b)return;
+  if(h&&!player.hidden&&db.channels[queue[qi]]&&!db.channels[queue[qi]].url.startsWith('demo:')){hMax=Math.max(hMax,h);retenirQualite(queue[qi],hMax);}
   b.textContent=!h?'':h>=2000?'4K':h>=1000?'1080p':h>=700?'720p':h+'p';b.className=h>=1000?'top':h>=700?'ok':h?'bas':'';}
 vid.addEventListener('resize',resolution);vid.addEventListener('loadedmetadata',resolution);
 function stopMedia(){vid.onerror=null;$('#pres').textContent='';if(hls){hls.destroy();hls=null}cancelAnimationFrame(raf);try{vid.pause()}catch(e){}vid.removeAttribute('src');vid.load();$('#perr').hidden=true}
@@ -22,7 +24,7 @@ let hlsP=null;
 function loadHls(){return hlsP||(hlsP=new Promise((ok,ko)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s);}))}
 function startChannel(){
   const c=db.channels[queue[qi]];if(!c)return;
-  $('#pname').textContent=c.name;favBtn();appliqueVolume();stopMedia();bar();
+  $('#pname').textContent=c.name;hMax=0;favBtn();appliqueVolume();stopMedia();bar();
   if(c.url.startsWith('demo:')){vid.style.display='none';tc.style.display='block';testCard(c.name);return;}
   tc.style.display='none';vid.style.display='block';
   const id=queue[qi];let src;
@@ -64,7 +66,7 @@ function testCard(name){
     t++;raf=requestAnimationFrame(f);
   })();
 }
-function closePlayer(){const vod=estVod(db.channels[queue[qi]]);stopMedia();player.hidden=true;ambiance();if(vod)render();if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}
+function closePlayer(){const vod=estVod(db.channels[queue[qi]]);stopMedia();player.hidden=true;ambiance();render();if(document.fullscreenElement)document.exitFullscreen().catch(()=>{})}
 function zap(d){if(queue.length<2)return;qi=(qi+d+queue.length)%queue.length;startChannel()}
 function fs(){try{const p=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();if(p&&p.catch)p.catch(()=>toast('Plein écran refusé par le navigateur'));}catch(e){}}
 function favBtn(){const b=$('#pfav');if(!b)return;const on=isFav(queue[qi]);b.textContent=on?'★':'☆';b.classList.toggle('on',on);}

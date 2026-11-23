@@ -1,0 +1,94 @@
+/* ---------- menus façon console (js/consoles.js) ---------- */
+#console{position:fixed;inset:0;overflow:hidden;color:#fff;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;font-weight:300;background:#071a33;user-select:none;-webkit-user-select:none}
+#console .neuf{transition:none!important}
+.c-haut{position:absolute;top:4.5vh;left:6vw;right:4vw;display:flex;align-items:center;gap:1.5vw;justify-content:flex-end;font-size:clamp(13px,1.4vw,21px);z-index:3;text-shadow:0 1px 4px rgba(0,0,0,.4)}
+.c-heure{white-space:nowrap;opacity:.92}
+.c-gear{background:none;border:0;color:#fff;font-size:clamp(18px,1.8vw,28px);opacity:.6;cursor:pointer;padding:0}
+.c-gear:hover{opacity:1}
+.c-aide{position:absolute;bottom:4vh;right:5vw;font-size:clamp(11px,1vw,15px);opacity:.55;white-space:pre;z-index:3}
+.fv{color:#ffd54a;font-style:normal}
+
+/* ===== barre croisée ===== */
+#console.c-barre{background:#0a2340}
+.xb-vague{position:absolute;inset:0;width:100%;height:100%}
+.xb-barre,.xb-col{transition:opacity .3s}
+.xb-barre{position:absolute;left:0;right:0;top:21vh;height:15vh}
+.xb-cat{position:absolute;left:19vw;top:0;width:12.5vw;min-width:92px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:.5;transition:transform .32s cubic-bezier(.2,.7,.2,1),opacity .3s;cursor:pointer}
+.xb-cat.on{opacity:1}
+.xb-ico{height:8vh;display:flex;align-items:center;justify-content:center;transition:transform .3s}
+.xb-cat.on .xb-ico{transform:scale(1.28)}
+.xb-e{font-size:clamp(28px,5.2vh,60px);line-height:1;filter:drop-shadow(0 0 8px rgba(255,255,255,.35))}
+.xb-i{max-width:8.5vw;max-height:7vh;object-fit:contain;filter:drop-shadow(0 0 6px rgba(0,0,0,.4))}
+.xb-cat b{font-weight:400;font-size:clamp(12px,1.35vw,21px);margin-top:1.4vh;opacity:0;transition:opacity .3s;white-space:nowrap;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+.xb-cat.on b{opacity:1}
+.xb-col,.xb-liste{position:absolute;height:0}
+.xb-col{left:19vw;top:37vh;width:66vw}
+.xb-it{position:absolute;left:0;top:0;width:100%;height:8.6vh;display:flex;align-items:center;gap:1.2vw;opacity:.62;
+  transition:transform .26s cubic-bezier(.2,.7,.2,1),opacity .26s;cursor:pointer}
+.xb-it.on{opacity:1}
+.xb-it.haut{opacity:.35}
+.xb-it .ic{width:12.5vw;min-width:92px;height:100%;flex:none;display:flex;align-items:center;justify-content:center;transition:transform .26s}
+.xb-it.on .ic{transform:scale(1.32)}
+.ic-e{font-size:clamp(22px,4vh,46px);line-height:1}
+.ic-i{max-width:8vw;max-height:6vh;object-fit:contain}
+.xb-it .tx{display:flex;flex-direction:column;min-width:0;gap:.25em}
+.xb-it b{font-weight:400;font-size:clamp(13px,1.55vw,25px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xb-it.on b{text-shadow:0 0 14px rgba(255,255,255,.7)}
+.xb-it .tx span{font-size:clamp(10px,1vw,16px);opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xb-it .tx span:empty{display:none}
+/* sous-niveaux : parent à gauche, liste à droite */
+.xb-sous{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .3s}
+.xb-niveau .xb-sous{opacity:1;pointer-events:auto}
+.xb-niveau .xb-barre,.xb-niveau .xb-col{opacity:0;pointer-events:none}
+.xb-parent{position:absolute;left:5vw;top:30vh;width:17vw;display:flex;flex-direction:column;align-items:center;text-align:center;opacity:.85}
+.xbp{height:13vh;display:flex;align-items:center;justify-content:center}
+.xbp-e{font-size:clamp(40px,10vh,110px);line-height:1;filter:drop-shadow(0 0 10px rgba(255,255,255,.35))}
+.xbp-i{max-width:14vw;max-height:12vh;object-fit:contain}
+.xb-parent b{font-weight:400;font-size:clamp(14px,1.7vw,27px);margin-top:1.5vh}
+.xb-parent>span{font-size:clamp(10px,.95vw,14px);opacity:.6;margin-top:.4em}
+.xb-trait{position:absolute;left:24vw;top:18vh;bottom:18vh;width:1px;background:linear-gradient(transparent,rgba(255,255,255,.45),transparent)}
+.xb-liste{left:26vw;top:41vh;width:64vw}
+
+/* ===== tuiles ===== */
+#console.c-tuiles{background:radial-gradient(ellipse at 75% 15%,#2a6cc0 0%,#0d3a7a 38%,#061a3d 75%,#040f26 100%)}
+.tu-fond{position:absolute;inset:0;overflow:hidden}
+.tu-hero{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;filter:blur(28px) brightness(.42) saturate(1.25);opacity:0;transition:opacity .7s}
+.tu-hero.on{opacity:1}
+.tu-bulles{position:absolute;inset:-15%;pointer-events:none;opacity:.9;animation:tu-flotte 38s ease-in-out infinite alternate;
+  background:radial-gradient(circle at 18% 28%,rgba(255,255,255,.09) 0 2.6vmin,transparent 2.8vmin),
+    radial-gradient(circle at 72% 64%,rgba(255,255,255,.06) 0 4.2vmin,transparent 4.4vmin),
+    radial-gradient(circle at 44% 82%,rgba(160,210,255,.08) 0 3vmin,transparent 3.2vmin),
+    radial-gradient(circle at 86% 22%,rgba(160,210,255,.07) 0 1.8vmin,transparent 2vmin),
+    radial-gradient(circle at 30% 60%,rgba(255,255,255,.05) 0 5.5vmin,transparent 5.7vmin)}
+@keyframes tu-flotte{to{transform:translate(5%,-4%)}}
+.tu-fil{margin-right:auto;font-size:clamp(15px,1.7vw,26px);font-weight:400}
+.tu-rang{position:absolute;left:7vw;right:0;top:19vh;height:24vh}
+.tu-t{position:absolute;left:0;bottom:0;width:16vh;height:16vh;border-radius:.6vh;background:rgba(255,255,255,.13);box-shadow:0 6px 18px rgba(0,0,0,.35);
+  transform-origin:left bottom;transition:transform .28s cubic-bezier(.2,.7,.2,1),opacity .28s,box-shadow .28s;cursor:pointer}
+.tu-t.on{background:rgba(255,255,255,.2);box-shadow:0 0 0 .35vh #fff,0 12px 30px rgba(0,0,0,.55)}
+.tu-img{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:.6vh}
+.tu-e{font-size:7vh;line-height:1}
+.tu-i{max-width:78%;max-height:78%;object-fit:contain}
+.tu-t.aff .tu-i{max-width:none;max-height:none;width:100%;height:100%;object-fit:cover}
+.tu-q{position:absolute;left:.5vh;bottom:.5vh;transform-origin:left bottom}
+.tu-q .qb{font-size:1.5vh}
+#console .qb:not(.vue){background:rgba(0,0,0,.35)}
+#console .q1080:not(.vue){color:#4be38f}#console .q720:not(.vue){color:#ffc24a}#console .q4k:not(.vue){color:#c79bff}#console .qsd:not(.vue){color:#ff8a65}
+.tu-t .fv{position:absolute;top:.4vh;right:.6vh;font-size:2vh;text-shadow:0 1px 2px #000}
+.tu-nom{position:absolute;left:0;top:100%;margin-top:.9vh;font-size:clamp(9px,1.05vw,15px);font-weight:400;white-space:nowrap;opacity:0;transition:opacity .2s;text-shadow:0 1px 4px rgba(0,0,0,.6)}
+.tu-t.on .tu-nom{opacity:1}
+.tu-info{position:absolute;left:7vw;right:28vw;top:53vh;text-shadow:0 1px 6px rgba(0,0,0,.45)}
+.tu-info h1{font-weight:300;font-size:clamp(22px,3.3vw,52px);margin:0 0 .35em;line-height:1.1}
+.tu-sous{opacity:.82;font-size:clamp(13px,1.35vw,21px)}
+.tu-info p{opacity:.78;font-size:clamp(12px,1.15vw,18px);line-height:1.45;margin-top:.9em;max-width:62ch;display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tu-prog{margin-top:1.2em;font-size:clamp(13px,1.25vw,19px)}
+.tu-prog b{font-weight:600}
+.tu-prog.suite{opacity:.7;margin-top:.6em}
+.tu-prog .gbar{max-width:420px;background:rgba(255,255,255,.2)}
+.tu-prog .gbar i{background:#fff}
+
+/* thème Néon Vice : les deux menus passent au rose / violet */
+[data-theme=vice] #console.c-tuiles{background:radial-gradient(ellipse at 75% 15%,#c2337f 0%,#5b1a7a 38%,#24083f 75%,#12041f 100%)}
+[data-theme=vice] .tu-t.on{box-shadow:0 0 0 .35vh #3ef0ff,0 0 26px rgba(62,240,255,.6)}
+[data-theme=vice] .xb-it.on b{text-shadow:0 0 14px #ff5fb0}

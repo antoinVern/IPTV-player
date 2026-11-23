@@ -3,13 +3,14 @@ const grid=$('#grid');
 const cur=()=>db.nodes[path[path.length-1]];
 const cols=()=>innerWidth<700?2:innerWidth<1000?3:4;
 const rows=()=>innerWidth<700?4:3;
-function items(){
-  const n=cur();
+function items(){return itemsDe(cur(),path.length===1);}
+// éléments d'un dossier (utilisé aussi par les menus façon console, js/consoles.js)
+function itemsDe(n,racine){
   const a=n.children.filter(id=>db.nodes[id]).map(id=>({t:'f',id})).concat(n.channels.filter(id=>db.channels[id]).map(id=>({t:'c',id})));
   if(n.lazy==='vodcats'||n.lazy==='sercats')a.unshift({t:'vsearch',k:n.lazy});
-  if(path.length===1)a.unshift({t:'all'});
+  if(racine)a.unshift({t:'all'});
   else if(!edit&&n.channels.some(hasEpg))a.unshift({t:'epg'});
-  if(edit){a.push({t:'add'});if(path.length>1)a.push({t:'addch'});}
+  if(edit){a.push({t:'add'});if(!racine)a.push({t:'addch'});}
   return a;
 }
 // image cassée : on essaie le logo suivant, puis l'icône
@@ -20,7 +21,7 @@ function tileHtml(it,i){
   const s=i===sel?' sel':'';
   const eb=(c)=>`<div class="eb"><button data-a="ren" title="Renommer">✎</button><button data-a="del" title="Supprimer">✕</button></div><div class="mv"><button data-a="l">◀</button><button data-a="r">▶</button>${c?'<button data-a="cp" title="Copier vers…">⧉</button>':''}</div>`;
   // films, épisodes, séries : affiche (poster) en grand
-  const affiche=(img,nom,sous,fav,boutons)=>`<div class="tile affiche${s}" data-i="${i}">${fav?'<div class="favb">★</div>':''}<img class="affb" src="${esc(img)}" referrerpolicy="no-referrer" alt=""><img class="aff" src="${esc(img)}" referrerpolicy="no-referrer" alt="" onerror="this.closest('.tile').classList.add('sansaff')"><div class="ico">${nom.ico}</div><div class="lbl">${esc(nom.t)}</div><div class="sub">${sous}</div>${boutons}</div>`;
+  const affiche=(img,nom,sous,fav,boutons)=>`<div class="tile affiche${s}" data-i="${i}">${fav?'<div class="favb">★</div>':''}${it.t==='c'?'<div class="qbw">'+badgeQualite(db.channels[it.id])+'</div>':''}<img class="affb" src="${esc(img)}" referrerpolicy="no-referrer" alt=""><img class="aff" src="${esc(img)}" referrerpolicy="no-referrer" alt="" onerror="this.closest('.tile').classList.add('sansaff')"><div class="ico">${nom.ico}</div><div class="lbl">${esc(nom.t)}</div><div class="sub">${sous}</div>${boutons}</div>`;
   if(it.t==='f'&&db.nodes[it.id].affiche&&db.nodes[it.id].logo){const n=db.nodes[it.id];
     return affiche(n.logo,{t:n.name,ico:esc(n.icon||'🍿')},n.note?'★ '+n.note:'',false,eb(false));}
   if(it.t==='c'&&estVod(db.channels[it.id])){const c=db.channels[it.id],pos=positions[it.id];
@@ -36,13 +37,15 @@ function tileHtml(it,i){
   if(it.t==='c'){const c=db.channels[it.id];
     const fb=`<div class="ini" style="background:linear-gradient(hsl(${hue(c.name)} 70% 62%),hsl(${hue(c.name)} 65% 45%))">${esc((c.name.trim()[0]||'?').toUpperCase())}</div>`;
     const img=c.logo?`<img class="logo" src="${esc(c.logo)}" referrerpolicy="no-referrer" onerror="this.outerHTML=this.dataset.fb" data-fb="${esc(fb)}">`:fb;
-    return `<div class="tile${s}" data-i="${i}">${isFav(it.id)?'<div class="favb">★</div>':''}${img}<div class="lbl">${esc(c.name)}</div><div class="sub now" data-now="${esc(it.id)}"></div>${eb(true)}</div>`;}
+    return `<div class="tile${s}" data-i="${i}">${isFav(it.id)?'<div class="favb">★</div>':''}<div class="qbw">${badgeQualite(c)}</div>${img}<div class="lbl">${esc(c.name)}</div><div class="sub now" data-now="${esc(it.id)}"></div>${eb(true)}</div>`;}
   if(it.t==='epg')return `<div class="tile${s}" data-i="${i}"><div class="ico">📅</div><div class="lbl">Guide TV</div><div class="sub">En ce moment</div></div>`;
-  if(it.t==='all')return `<div class="tile${s}" data-i="${i}"><div class="ico">🔍</div><div class="lbl">Toutes les chaînes</div><div class="sub">${Object.keys(db.channels).length}</div></div>`;
+  if(it.t==='all')return `<div class="tile${s}" data-i="${i}"><div class="ico">🔍</div><div class="lbl">Toutes les chaînes</div><div class="sub">${Object.values(db.channels).filter(c=>!c.kind).length}</div></div>`;
   if(it.t==='add')return `<div class="tile add${s}" data-i="${i}"><div class="ico">＋</div><div class="lbl">Nouvelle catégorie</div></div>`;
   return `<div class="tile add${s}" data-i="${i}"><div class="ico">📺</div><div class="lbl">Ajouter une chaîne</div></div>`;
 }
 function render(){
+  if(menuConsole()){renderConsole();return;}   // barre croisée / tuiles (js/consoles.js)
+  $('#console').hidden=true;$('#app').hidden=false;
   const its=items(),pp=cols()*rows();
   if(sel>=its.length)sel=Math.max(0,its.length-1);
   const pages=Math.max(1,Math.ceil(its.length/pp)),page=Math.floor(sel/pp);
@@ -81,7 +84,10 @@ function activate(it){
   else if(it.t==='add')addFolder();
   else if(it.t==='addch')searchModal('add');
 }
-function back(){if(path.length>1){path.pop();sel=selStack.pop()||0;render();}else{sel=0;render();toast('Tu es déjà à l’accueil');}}
+function back(){if(path.length>1){path.pop();sel=selStack.pop()||0;
+    // barre croisée : la catégorie s'affiche sur la barre, on remonte donc jusqu'à l'accueil
+    if(menuConsole()==='barre'&&path.length===2){barreLigne[path[1]]=sel;path.pop();sel=selStack.pop()||0;}
+    render();}else{sel=0;render();toast('Tu es déjà à l’accueil');}}
 function home(){if(path.length>1){path=[db.root];selStack=[];sel=0;render();}else back();}
 grid.addEventListener('click',e=>{
   const t=e.target.closest('.tile[data-i]');if(!t)return;
