@@ -1,0 +1,2 @@
+Mets ici un fichier nomme fond.mp3 pour l utiliser comme musique de fond
+(Reglages > Musique de fond > Mon fichier). Il faut lancer node proxy.js.

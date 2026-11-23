@@ -1,0 +1,41 @@
+plugins {
+    id 'com.android.application'
+}
+
+// La page web (index.html, css/, js/, img/, musique/) est copiée dans l'appli à chaque compilation :
+// modifie les fichiers du dossier principal, pas de copie à faire à la main.
+def www = layout.buildDirectory.dir('generated/www')
+tasks.register('copierPage', Copy) {
+    from(rootProject.file('..')) {
+        include 'index.html', 'css/**', 'js/**', 'img/**', 'musique/**'
+        exclude '**/LISEZMOI.txt'
+    }
+    into www.map { it.dir('www') }
+}
+preBuild.dependsOn 'copierPage'
+
+android {
+    namespace 'fr.menutv'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'fr.menutv'
+        minSdk 22          // Fire OS 5 et plus récents
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+    sourceSets {
+        main.assets.srcDirs += www
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.debug   // appli perso : signée avec la clé locale
+        }
+    }
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menu TV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Kaushan+Script&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/theme-vice.css">
+</head>
+<body>
+<div id="app">
+  <div id="stage">
+    <div id="grid"></div>
+    <button class="arrow left" id="prev" aria-label="Page précédente"></button>
+    <button class="arrow right" id="next" aria-label="Page suivante"></button>
+  </div>
+  <footer>
+    <svg viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#dde1e5"/></linearGradient></defs>
+      <path d="M0,40 C190,40 270,92 500,92 C730,92 810,40 1000,40 L1000,200 L0,200Z" fill="url(#g)"/>
+      <path d="M0,40 C190,40 270,92 500,92 C730,92 810,40 1000,40" fill="none" stroke="#7fcaee" stroke-width="3" vector-effect="non-scaling-stroke"/>
+    </svg>
+    <button class="circ" id="home" title="Retour">⌂</button>
+    <button class="circ" id="gear" title="Réglages">⚙</button>
+    <div class="center"><div class="t" id="crumb"></div><div class="d" id="clock"></div></div>
+  </footer>
+</div>
+<div id="modal" hidden></div>
+<div id="player" hidden>
+  <video id="vid" autoplay playsinline></video>
+  <canvas id="tc" width="1280" height="720"></canvas>
+  <div class="ptop"><button id="pclose" title="Fermer">✕</button><span id="pname"></span><span id="pres" title="Résolution de l’image"></span><button id="pfav" title="Favori">☆</button><button id="pvol" title="Couper / remettre le son">🔊</button><input id="pvolr" type="range" min="0" max="100" step="5" title="Volume"><button id="pfull" title="Plein écran">⛶</button></div>
+  <div id="pinfo"></div>
+  <div id="perr" hidden></div>
+</div>
+<div id="toast"></div>
+
+<script src="js/france.js"></script>
+<script src="js/donnees.js"></script>
+<script src="js/guide.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/fenetres.js"></script>
+<script src="js/xtream.js"></script>
+<script src="js/lecteur.js"></script>
+<script src="js/ambiance.js"></script>
+<script src="js/vod.js"></script>
+<script src="js/majpc.js"></script>
+<script src="js/clavier.js"></script>
+<script src="js/appli.js"></script>
+</body>
+</html>

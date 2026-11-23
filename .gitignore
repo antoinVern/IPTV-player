@@ -1,0 +1,22 @@
+# fichiers fabriqués (se refont avec construire-appli.bat / construire-exe.bat)
+MenuTV.apk
+Installer Menu TV.exe
+android/.gradle/
+android/app/build/
+android/local.properties
+electron/node_modules/
+electron/dist/
+electron/www/
+electron/proxy.js
+electron/icone.ico
+
+# ta musique perso : pas publiée (droits d'auteur)
+musique/*.mp3
+musique/*.ogg
+musique/*.m4a
+musique/*.wav
+
+# divers
+*.log
+.DS_Store
+Thumbs.db
