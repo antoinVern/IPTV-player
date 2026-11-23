@@ -89,7 +89,7 @@ function volMusique(){synth.vol();fichier.vol();}
 // la musique ne démarre qu'après un premier clic / touche (règle des navigateurs)
 let geste=false;
 function ambiance(){
-  const m=musicMode(),joue=geste&&player.hidden&&!document.hidden;
+  const m=musicMode(),joue=geste&&player.hidden&&!document.hidden&&!(typeof appliOuverte!=='undefined'&&appliOuverte);
   if(joue&&m==='synth')synth.start();else synth.stop();
   if(joue&&m==='file')fichier.start();else fichier.stop();
 }

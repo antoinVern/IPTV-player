@@ -26,6 +26,7 @@ function infoEl(it){
     if(it.a==='music')return{ico:'🎵',titre:'Musique de fond',sous:MUSIQUES[musicMode()]};
     return{ico:'🔌',titre:'Connecter mon Xtream',sous:db.xt?'Connecté':'Pas encore connecté'};
   }
+  if(it.t==='app')return{ico:APPLIS[it.k].ico,titre:APPLIS[it.k].nom,sous:sousAppli(it.k)};
   if(it.t==='all')return{ico:'🔍',titre:'Toutes les chaînes',sous:Object.values(db.channels).filter(c=>!c.kind).length+' chaînes'};
   if(it.t==='epg')return{ico:'📅',titre:'Guide TV',sous:'En ce moment à la télé'};
   if(it.t==='vsearch')return{ico:'🔍',titre:it.k==='vodcats'?'Rechercher un film':'Rechercher une série',sous:'Dans tout le catalogue'};

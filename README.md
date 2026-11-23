@@ -56,6 +56,9 @@ Sans le proxy, `index.html` s'ouvre aussi directement, mais le navigateur bloque
 | `js/xtream.js` | connexion et import Xtream |
 | `js/lecteur.js` | lecteur vidéo (hls.js), mire de démo |
 | `js/vod.js` | 🎬 Films et 🍿 Séries de l'Xtream (chargés à la demande), recherche, reprise de lecture |
+| `js/applis.js` | 📱 YouTube, Twitch, Spotify (PC : fenêtre avec pubs bloquées · Fire TV : applis installées, SmartTube d'abord) |
+| `js/consoles.js` | menus barre croisée (façon PS3) et tuiles (façon PS4) |
+| `js/qualite.js` | badges de qualité d'image (annoncée / mesurée) |
 | `js/appli.js` | touches de la télécommande dans l'appli Fire TV |
 | `js/ambiance.js` | thème + musique de fond (synthwave générée, ou `musique/fond.mp3`) |
 | `js/clavier.js` | clavier / télécommande, démarrage |

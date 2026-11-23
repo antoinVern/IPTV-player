@@ -1,0 +1,6 @@
+Bloqueur de pubs Twitch utilisé par l'appli PC : Purple AdBlock
+https://github.com/arthurbolsoni/Purple-adblock — Copyright Arthur Bolsoni, licence Apache-2.0 (voir LICENSE).
+
+purpleadblocker.user.js est une copie de secours livrée avec l'appli. Au lancement de Twitch, l'appli
+télécharge la dernière version (au plus une fois par jour) dans %APPDATA%\Menu TV\pub-twitch.js,
+car Twitch change souvent sa façon d'insérer les pubs.

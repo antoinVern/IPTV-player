@@ -6,6 +6,7 @@ const rows=()=>innerWidth<700?4:3;
 function items(){return itemsDe(cur(),path.length===1);}
 // éléments d'un dossier (utilisé aussi par les menus façon console, js/consoles.js)
 function itemsDe(n,racine){
+  if(n.applis)return ITEMS_APPLIS.slice();   // YouTube, Twitch, Spotify (js/applis.js)
   const a=n.children.filter(id=>db.nodes[id]).map(id=>({t:'f',id})).concat(n.channels.filter(id=>db.channels[id]).map(id=>({t:'c',id})));
   if(n.lazy==='vodcats'||n.lazy==='sercats')a.unshift({t:'vsearch',k:n.lazy});
   if(racine)a.unshift({t:'all'});
@@ -28,6 +29,7 @@ function tileHtml(it,i){
     const sous=(c.note?'★ '+c.note:'')+(pos?(c.note?' · ':'')+'▶ reprise '+duree(pos):'');
     if(c.logo)return affiche(c.logo,{t:c.name,ico:'🎬'},sous,isFav(it.id),eb(true));
     return `<div class="tile${s}" data-i="${i}">${isFav(it.id)?'<div class="favb">★</div>':''}<div class="ico">${c.kind==='episode'?'📺':'🎬'}</div><div class="lbl">${esc(c.name)}</div><div class="sub">${sous}</div>${eb(true)}</div>`;}
+  if(it.t==='app'){const a=APPLIS[it.k];return `<div class="tile${s}" data-i="${i}"><div class="appico" style="background:${a.coul}">${a.glyphe}</div><div class="lbl">${a.nom}</div><div class="sub">${esc(sousAppli(it.k))}</div></div>`;}
   if(it.t==='vsearch')return `<div class="tile${s}" data-i="${i}"><div class="ico">🔍</div><div class="lbl">${it.k==='vodcats'?'Rechercher un film':'Rechercher une série'}</div><div class="sub">dans tout le catalogue</div></div>`;
   if(it.t==='f'){const n=db.nodes[it.id];const k=n.children.length+n.channels.length;
     const ico=`<div class="ico">${esc(n.icon||'📁')}</div>`;
@@ -77,6 +79,7 @@ function activate(it){
     return;
   }
   if(it.t==='vsearch'){rechercheVod(it.k);return;}
+  if(it.t==='app'){ouvrirAppli(it.k);return;}
   if(it.t==='f'){selStack.push(sel);path.push(it.id);sel=0;render();if(it.id===db.favId&&!cur().channels.length)toast('Pas encore de favoris : bouton ★ dans le lecteur, ou touche Menu ≡ sur une chaîne');}
   else if(it.t==='c'){startQueue(cur().channels,cur().channels.indexOf(it.id));}
   else if(it.t==='all')searchModal('play');

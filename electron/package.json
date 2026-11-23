@@ -11,16 +11,33 @@
     "dist": "node preparer.js && electron-builder --win nsis"
   },
   "devDependencies": {
-    "electron": "33.2.1",
+    "electron": "45.2.3",
     "electron-builder": "25.1.8"
   },
   "build": {
     "appId": "fr.menutv.pc",
     "productName": "Menu TV",
-    "files": ["main.js", "proxy.js", "icone.ico", "package.json"],
-    "extraResources": [{ "from": "www", "to": "www" }],
-    "directories": { "output": "dist" },
-    "win": { "target": "nsis", "icon": "icone.ico" },
+    "files": [
+      "main.js",
+      "proxy.js",
+      "icone.ico",
+      "package.json",
+      "twitch-preload.js",
+      "twitch/**"
+    ],
+    "extraResources": [
+      {
+        "from": "www",
+        "to": "www"
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icone.ico"
+    },
     "nsis": {
       "oneClick": true,
       "perMachine": false,
@@ -30,5 +47,8 @@
       "deleteAppDataOnUninstall": false,
       "artifactName": "Installer Menu TV.${ext}"
     }
+  },
+  "dependencies": {
+    "@ghostery/adblocker-electron": "2.20.3"
   }
 }

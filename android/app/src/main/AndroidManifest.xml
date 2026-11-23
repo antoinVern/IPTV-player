@@ -5,6 +5,21 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- télé : pas d'écran tactile, Leanback (Fire TV / Android TV) facultatif -->
+    <!-- Android 11+ : applis que Menu TV a le droit de voir et de lancer -->
+    <queries>
+        <package android:name="com.teamsmart.videomanager.tv" />
+        <package android:name="com.liskovsoft.smarttubetv.beta" />
+        <package android:name="com.liskovsoft.smarttubetv" />
+        <package android:name="com.amazon.firetv.youtube" />
+        <package android:name="com.google.android.youtube.tv" />
+        <package android:name="com.google.android.youtube" />
+        <package android:name="tv.twitch.android.viewer" />
+        <package android:name="tv.twitch.android.app" />
+        <package android:name="com.spotify.tv.android" />
+        <package android:name="com.spotify.music" />
+        <intent><action android:name="android.intent.action.VIEW" /><data android:scheme="amzn" /></intent>
+    </queries>
+
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
     <uses-feature android:name="android.software.leanback" android:required="false" />
 

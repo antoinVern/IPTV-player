@@ -1,6 +1,9 @@
 package fr.menutv;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.webkit.JavascriptInterface;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -76,6 +79,7 @@ public class MainActivity extends Activity {
                 return !HOTE.equals(r.getUrl().getHost());     // on ne quitte jamais la page
             }
         });
+        web.addJavascriptInterface(new Pont(), "MenuTVAndroid");
         web.setFocusable(true);
         web.requestFocus();
         web.loadUrl(ORIGINE + "/");
@@ -132,6 +136,38 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
         web.destroy();
         super.onDestroy();
+    }
+
+    /* ---------- YouTube, Twitch, Spotify : on lance l'appli installée ---------- */
+    // par ordre de préférence ; pour YouTube, SmartTube (libre, sans pub) passe avant l'appli officielle
+    static final String[][] PAQUETS = {
+        {"youtube", "com.teamsmart.videomanager.tv", "com.liskovsoft.smarttubetv.beta", "com.liskovsoft.smarttubetv",
+                    "com.amazon.firetv.youtube", "com.google.android.youtube.tv", "com.google.android.youtube"},
+        {"twitch", "tv.twitch.android.viewer", "tv.twitch.android.app"},
+        {"spotify", "com.spotify.tv.android", "com.spotify.music"},
+    };
+
+    class Pont {
+        /** Renvoie le paquet lancé, "store" (appli absente : Appstore ouvert) ou "absent". */
+        @JavascriptInterface
+        public String ouvrirAppli(String nom) {
+            PackageManager pm = getPackageManager();
+            for (String[] p : PAQUETS) {
+                if (!p[0].equals(nom)) continue;
+                for (int i = 1; i < p.length; i++) {
+                    Intent it = pm.getLeanbackLaunchIntentForPackage(p[i]);
+                    if (it == null) it = pm.getLaunchIntentForPackage(p[i]);
+                    if (it != null) { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); startActivity(it); return p[i]; }
+                }
+                try {
+                    Intent s = new Intent(Intent.ACTION_VIEW, Uri.parse("amzn://apps/android?s=" + Uri.encode(nom)));
+                    s.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(s);
+                    return "store";
+                } catch (Exception e) { return "absent"; }
+            }
+            return "absent";
+        }
     }
 
     /* ---------- serveur interne ---------- */

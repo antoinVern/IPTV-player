@@ -38,7 +38,8 @@ function ensureVod(d){
   [['films','Films','🎬','vodcats'],['series','Séries','🍿','sercats']].forEach(([k,name,icon,lazy])=>{
     if(!d.vodIds[k]||!d.nodes[d.vodIds[k]]){const id=nid();d.nodes[id]={id,name,icon,lazy,children:[],channels:[]};d.vodIds[k]=id;}
   });
-  const r=d.nodes[d.root],v=[d.vodIds.films,d.vodIds.series];
+  if(!d.vodIds.applis||!d.nodes[d.vodIds.applis]){const id=nid();d.nodes[id]={id,name:'Applis',icon:'📱',applis:true,children:[],channels:[]};d.vodIds.applis=id;}
+  const r=d.nodes[d.root],v=[d.vodIds.films,d.vodIds.series,d.vodIds.applis];
   r.children=[...r.children.filter(id=>id===d.favId),...v,...r.children.filter(id=>id!==d.favId&&!v.includes(id))];
 }
 // réimport : on oublie ce qui a été chargé
